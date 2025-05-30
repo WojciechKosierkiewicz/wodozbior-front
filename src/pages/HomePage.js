@@ -4,8 +4,8 @@ import "../styles/home-page.scss";
 function HomePage() {
 
     return (
-        <main>
-            <h1>Homepage</h1>
+        <main className="home-container">
+            
         </main>
     );
 }

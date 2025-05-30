@@ -4,10 +4,10 @@ import "../styles/footer.scss";
 function Footer() {
 
     return (
-        <main>
-            <h1>Footer</h1>
+        <footer className="footer">
+            <p>© 2025 Wodozbiór – Wszystkie prawa zastrzeżone</p>
             <small><a href="https://www.flaticon.com/free-icons/scarcity" title="scarcity icons">Scarcity icons created by Freepik - Flaticon</a></small>
-        </main>
+        </footer>
     );
 }
 
