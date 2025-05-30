@@ -16,7 +16,7 @@ function Header() {
             <div className="header-center">
                 <nav id="main-nav">
                     <ul className="menu">
-                        <li className="menu-item" id="home">
+                        <li className="menu-item">
                             <NavLink to="/" className={({ isActive }) => isActive ? "active" : ""}>Strona Główna</NavLink>
                         </li>
                         <li className="menu-item">

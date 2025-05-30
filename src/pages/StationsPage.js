@@ -4,7 +4,9 @@ import "../styles/stations-page.scss";
 function StationsPage() {
 
     return (
-        <main className="stations-page"></main>
+        <main className="stations-page">
+            <h1>Stacje</h1>
+        </main>
     );
 }
 

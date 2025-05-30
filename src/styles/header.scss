@@ -1,0 +1,47 @@
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5rem;
+    
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        img {
+            height: 5rem;
+            width: auto;
+        }
+        .logo-text {
+            font-size: 2rem;
+            font-weight: 400;
+            letter-spacing: 0.1rem;
+        }
+    }
+
+    .header-center {
+        display: flex;
+        justify-content: center;
+        #main-nav {
+            .menu {
+                display: flex;
+                gap: 4rem;
+                list-style: none;
+                .menu-item {
+                    a {
+                        text-decoration: none;
+                        color: black;
+                        letter-spacing: 0.1rem;
+                        font-size: 1rem;
+                        font-weight: 400;
+                        &.active {
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .header-right {
+    }
+}

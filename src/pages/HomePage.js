@@ -5,7 +5,7 @@ function HomePage() {
 
     return (
         <main>
-            <h1>Witam</h1>
+            <h1>Homepage</h1>
         </main>
     );
 }
