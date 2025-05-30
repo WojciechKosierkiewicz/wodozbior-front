@@ -1,9 +1,24 @@
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+import "./App.scss";
+import routes from "./routes";
+
 function App() {
-  return (
-    <div className="App">
-      <h1>Wodozbiór – Frontend</h1>
-    </div>
-  );
+    return (
+        <Router>
+            <div className="App">
+                <Header />
+                <Routes>
+                    {routes.map((route, index) => (
+                        <Route key={index} path={route.path} element={route.element} />
+                    ))}
+                </Routes>
+                <Footer />
+            </div>
+        </Router>
+    );
 }
 
 export default App;
