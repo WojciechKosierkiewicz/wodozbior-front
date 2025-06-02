@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "../styles/home-page.scss";
+import MapView from "../components/MapView";
 
 function HomePage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -31,7 +32,10 @@ function HomePage() {
                     </div>
                 </div>
                 <div className="map-panel">
-                    <div className="map-placeholder">mapa</div>
+                    <MapView
+                        selectedPoint={selectedPoint}
+                        setSelectedPoint={setSelectedPoint}
+                    />
                     <div className="legend">legenda</div>
                 </div>
             </div>

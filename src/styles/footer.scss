@@ -1,0 +1,37 @@
+@import "./variables.scss";
+
+.footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  padding: 1.5rem 1rem;
+  background-color: $main_background;
+  color: $common_text;
+  font-family: $secondary_font;
+  font-size: 0.95rem;
+  text-align: center;
+  border-top: 1px solid $grey_border;
+
+  p {
+    margin: 0;
+    font-weight: 500;
+    color: $dark_blue;
+  }
+
+  small {
+    margin-top: 0.25rem;
+
+    a {
+      color: $common_text;
+      text-decoration: none;
+      font-size: 0.8rem;
+
+      &:hover {
+        text-decoration: underline;
+        color: $accent-light;
+      }
+    }
+  }
+}

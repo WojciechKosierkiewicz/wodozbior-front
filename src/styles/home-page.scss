@@ -2,4 +2,87 @@
 
 .home-container {
     background-color: $main_background;
+    min-height: 85vh;
+    .main-container {
+        height: 85vh;
+        display: flex;
+        justify-content: space-between;
+        padding-top: 2rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        .left-panel {
+            width: 45%;
+            .search-bar {
+                height: 7%;
+                input {
+                    height: 100%;
+                    width: 90%;
+                    font-size: 1.3rem;
+                    border: 2px solid $grey_border;
+                    border-radius: 15px;
+                    text-align: center;
+                    background-color: $white;
+                    color: $dark_blue;
+
+                    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+                    transition: border 0.2s ease, box-shadow 0.2s ease;
+
+                    &:focus {
+                        outline: none;
+                        border-color: $dark_blue;
+                        box-shadow: 0 0 0 2px rgba(92, 202, 255, 0.3);
+                    }
+                    &::placeholder {
+                        color: $common_text;
+                    }
+                }
+            }
+            .details-box {
+                margin-top: 0.8rem;
+                background-color: $white;
+                width: 90%;
+                height: 85%;
+
+                border: 2px solid $grey_border;
+                border-radius: 20px;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+                padding: 1rem;
+
+                h2 {
+                    font-weight: 500;
+                    color: $dark_blue;
+                }
+            }
+        }
+        .map-panel {
+            width: 55%;
+            height: 94%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            .legend {
+                position: absolute;
+                bottom: 1rem;
+                left: 1rem;
+                background-color: $accent-light;
+                padding: 0.8rem 1.2rem;
+                border-radius: 16px;
+                font-size: 1rem;
+                color: white;
+                font-weight: 500;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+                pointer-events: none;
+                z-index: 1200;
+            }
+            .leaflet-container {
+                outline: none;
+                flex: 1;
+                border-radius: 20px;
+                overflow: hidden;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+                border: 2px solid $grey_border;
+                background-color: $white;
+            }
+        }
+    }
 }
