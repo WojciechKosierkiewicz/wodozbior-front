@@ -1,0 +1,62 @@
+@import "./variables.scss";
+
+.river-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: $white;
+  border: 2px solid $grey_border;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,.06);
+  overflow-y: auto;
+  max-height: 65vh;
+
+  &::-webkit-scrollbar {
+    width: 10px;
+  }
+  &::-webkit-scrollbar-track {
+    background: lighten($main_background, 5%);
+    border-radius: 8px;
+    margin: 8px 0;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: $accent-light;
+    border-radius: 8px;
+    border: 2px solid lighten($main_background, 5%);
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: darken($accent-light, 10%);
+  }
+}
+
+.river-item {
+  border-bottom: 1px solid $grey_border;
+
+  &:last-child { border-bottom: none; }
+
+  a {
+    display: flex;
+    align-items: flex-start;
+    gap: .8rem;
+    padding: .9rem 1.2rem;
+    text-decoration: none;
+    color: $dark_blue;
+    align-items: center;
+
+    &:hover { background: rgba($accent-light, .08); }
+  }
+
+  .river-icon { font-size: 1.6rem; }
+
+  .river-info {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+
+  .river-name    { font-weight: 600; }
+  .river-stations{
+    font-size: 0.9rem;
+    color: $common_text;
+  }
+}

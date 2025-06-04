@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "../styles/home-page.scss";
 import MapView from "../components/MapView";
+import SearchInput from "../components/SearchInput";
 
 function HomePage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -10,14 +11,11 @@ function HomePage() {
         <main className="home-container">
             <div className="main-container">
                 <div className="left-panel">
-                    <div className="search-bar">
-                        <input
-                            type="text"
-                            placeholder="Wyszukaj rzeki/stacje"
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                    </div>
+                    <SearchInput
+                        value={searchTerm}
+                        onChange={setSearchTerm}
+                        placeholder="Wyszukaj rzeki/stacje"
+                    />
                     <div className="details-box">
                         <h2>Wybrany punkt:</h2>
                         {selectedPoint ? (
