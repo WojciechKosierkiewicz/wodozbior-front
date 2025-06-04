@@ -1,0 +1,54 @@
+@import "./variables.scss";
+
+.chart-wrapper {
+  margin-top: 1rem;
+  background-color: #f9fbff;
+  padding: 1rem;
+  border-radius: 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+  border: 1px solid $grey_border;
+  width: 100%;
+  height: auto;
+
+  .custom-tooltip {
+    background: white;
+    border: 1px solid $grey_border;
+    border-radius: 12px;
+    padding: 0.6rem 0.9rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    font-size: 0.95rem;
+    background: linear-gradient(to bottom, #ffffff, #f2f7fc);
+
+    .label {
+        font-weight: 600;
+        color: $dark_blue;
+        margin-bottom: 0.2rem;
+    }
+
+    .value {
+        color: $accent;
+        font-weight: 500;
+    }
+  }
+
+}
+
+.chart-title {
+  font-size: 1rem;
+  color: $dark_blue;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .chart-badge {
+    margin-left: 1rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 0.2rem 0.6rem;
+    border-radius: 12px;
+    min-width: 60px;
+    text-align: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  }
+}

@@ -65,12 +65,12 @@ function ResetViewControl() {
 
 function MapView({ selectedPoint, setSelectedPoint }) {
   return (
-    <MapContainer
-      center={[52, 19]}
-      zoom={6}
-      style={{ height: "100%", width: "100%" }}
-      scrollWheelZoom
-    >
+      <MapContainer
+        center={[52, 19]}
+        zoom={6}
+        style={{ height: "100%", width: "100%" }}
+        scrollWheelZoom
+      >
       <TileLayer
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
