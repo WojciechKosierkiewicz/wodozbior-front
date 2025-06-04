@@ -13,21 +13,23 @@ const mockRivers = [
   { id: "narew", name: "Narew", stationCount: 7 },
 ];
 
-const [query, setQuery] = useState("");
+function RiversPage() {
+  const [query, setQuery] = useState("");
 
-const filteredRivers = useMemo(() => {
-  const norm = normalize(query.trim());
-  return mockRivers.filter((r) => normalize(r.name).includes(norm));
-}, [query]);
+  const filteredRivers = useMemo(() => {
+    const norm = normalize(query.trim());
+    return mockRivers.filter((r) => normalize(r.name).includes(norm));
+  }, [query]);
 
-return (
-  <main className="rivers-page">
-    <div className="rivers-list">
-      <h1 className="rivers-title">Rzeki</h1>
-      <SearchInput value={query} onChange={setQuery} placeholder="Wyszukaj" />
-      <RiverList rivers={filteredRivers} />
-    </div>
-  </main>
-);
+  return (
+    <main className="rivers-page">
+      <div className="rivers-list">
+        <h1 className="rivers-title">Rzeki</h1>
+        <SearchInput value={query} onChange={setQuery} placeholder="Wyszukaj" />
+        <RiverList rivers={filteredRivers} />
+      </div>
+    </main>
+  );
+}
 
 export default RiversPage;
