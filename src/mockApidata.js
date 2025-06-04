@@ -25,7 +25,7 @@ export const exampleApi = {
       longitude: 16.9252,
       waterLevel: 200,
       measurementDate: "2023-10-01T12:00:00Z",
-      color: "#0000FF"
+      color: "#FFFF00"
     }
   ],
 

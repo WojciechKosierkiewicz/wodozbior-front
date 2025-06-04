@@ -3,22 +3,20 @@ import SearchInput from "../components/SearchInput";
 import RiverList from "../components/RiverList";
 import "../styles/rivers-page.scss";
 import { normalize } from "../utils/text";
+import { exampleApi } from "../mockApidata";
 
-const mockRivers = [
-  { id: "wisla", name: "Wisła", stationCount: 18 },
-  { id: "odra", name: "Odra", stationCount: 12 },
-  { id: "warta", name: "Warta", stationCount: 10 },
-  { id: "bug", name: "Bug", stationCount: 9 },
-  { id: "san", name: "San", stationCount: 7 },
-  { id: "narew", name: "Narew", stationCount: 7 },
-];
+const apiRivers = exampleApi.riversWithStations.map(({ first, second }) => ({
+  id: first.toLowerCase(),
+  name: first,
+  stationCount: second.length,
+}));
 
 function RiversPage() {
   const [query, setQuery] = useState("");
 
   const filteredRivers = useMemo(() => {
     const norm = normalize(query.trim());
-    return mockRivers.filter((r) => normalize(r.name).includes(norm));
+    return apiRivers.filter((r) => normalize(r.name).includes(norm));
   }, [query]);
 
   return (

@@ -1,0 +1,29 @@
+@import "./variables.scss";
+
+.stations-page {
+  background-color: $main_background;
+  min-height: 85vh;
+
+  .stations-list {
+    max-width: 480px;
+    padding: 1.5rem 0;
+    margin: 0 auto;
+
+    .stations-title {
+      text-align: center;
+      font-size: 2.2rem;
+      color: $dark_blue;
+      margin-bottom: 1rem;
+    }
+
+    .search-bar {
+      width: 100%;
+      margin-bottom: 0.5rem;
+      height: 2.5rem;
+
+      input {
+        width: 100%;
+      }
+    }
+  }
+}
