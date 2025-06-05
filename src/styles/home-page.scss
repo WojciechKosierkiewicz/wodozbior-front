@@ -59,6 +59,36 @@
             }
           }
         }
+
+        .chart-toggle {
+          margin: 1rem 0 1.2rem 0;
+          display: flex;
+          gap: 0.6rem;
+
+          button {
+            flex: 1;
+            padding: 0.5rem 0;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border: 1px solid $accent;
+            border-radius: 8px;
+            background-color: transparent;
+            color: $accent;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s;
+
+            &:hover {
+              background-color: $accent-light;
+              color: $dark_blue;
+            }
+
+            &.active {
+              background-color: $accent;
+              color: $white;
+            }
+          }
+        }
+
         .no-selection {
           height: 100%;
           display: flex;

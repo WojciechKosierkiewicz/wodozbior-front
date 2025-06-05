@@ -13,6 +13,7 @@ function HomePage() {
   const [searchTerm,    setSearchTerm]    = useState("");
   const [selectedPoint, setSelectedPoint] = useState(null);
   const [filterRiver,   setFilterRiver]   = useState(null);
+  const [chartType,     setChartType]     = useState("waterLevel");
 
   const combinedPoints = useMemo(
     () =>
@@ -127,8 +128,33 @@ function HomePage() {
                     {selectedPoint.river}
                   </Link>
                 </p>
-                <p>Ostatni pomiar: {selectedPoint.waterLevel} cm</p>
-                <StationChart selectedPoint={selectedPoint} />
+                <p>Ostatni pomiar poziomu wody: {selectedPoint.waterLevel} cm</p>
+
+                <div className="chart-toggle">
+                  <button
+                    className={chartType === "waterLevel" ? "active" : ""}
+                    onClick={() => setChartType("waterLevel")}
+                  >
+                    Poziom wody
+                  </button>
+                  <button
+                    className={chartType === "waterTemperature" ? "active" : ""}
+                    onClick={() => setChartType("waterTemperature")}
+                  >
+                    Temperatura
+                  </button>
+                  <button
+                    className={chartType === "waterFlow" ? "active" : ""}
+                    onClick={() => setChartType("waterFlow")}
+                  >
+                    Przepływ
+                  </button>
+                </div>
+
+                <StationChart
+                  selectedPoint={selectedPoint}
+                  chartType={chartType}
+                />
                 {filterRiver && (
                   <button
                     className="clear-filter-btn"
