@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Link } from "react-router-dom";
+import { FaMapMarkedAlt, FaTimesCircle } from "react-icons/fa";
 
 import MapView      from "../components/MapView";
 import SearchInput  from "../components/SearchInput";
@@ -11,6 +12,21 @@ import "../styles/home-page.scss";
 function HomePage() {
   const [searchTerm,    setSearchTerm]    = useState("");
   const [selectedPoint, setSelectedPoint] = useState(null);
+  const [filterRiver,   setFilterRiver]   = useState(null);
+
+  const combinedPoints = useMemo(
+    () =>
+      exampleApi.stations.map((station) => ({
+        id: station.id,
+        name: station.name?.trim() || `Stacja ${station.id}`,
+        river: station.river,
+        lat: station.latitude,
+        lon: station.longitude,
+        waterLevel: station.waterLevel,
+        color: station.color || "#0EA5E9",
+      })),
+    []
+  );
 
   const rivers   = useMemo(
     () => [...new Set(exampleApi.stations.map(s => s.river))],
@@ -19,8 +35,7 @@ function HomePage() {
 
   const stations = useMemo(
     () => exampleApi.stations.map(
-      s => s.name?.trim() || `Stacja ${s.id}`
-    ),
+      s => s.name?.trim() || `Stacja ${s.id}`),
     []
   );
 
@@ -45,9 +60,36 @@ function HomePage() {
     ])];
   }, [searchTerm, rivers, stations]);
 
-  const handleSuggestion = picked => {
+  const handleSuggestion = (picked) => {
     setSearchTerm(picked);
+
+    const foundStation = combinedPoints.find(
+      (pt) => pt.name.toLowerCase() === picked.toLowerCase()
+    );
+    if (foundStation) {
+      setSelectedPoint(foundStation);
+      setFilterRiver(null);
+      return;
+    }
+
+    const isRiver = rivers.some(
+      (r) => r.toLowerCase() === picked.toLowerCase()
+    );
+    if (isRiver) {
+      setFilterRiver(picked);
+      setSelectedPoint(null);
+      return;
+    }
   };
+
+  const clearFilter = () => {
+    setFilterRiver(null);
+    setSearchTerm("");
+    setSelectedPoint(null);
+  };
+
+  const riverSlug = (riverName) =>
+    encodeURIComponent(riverName.toLowerCase().replace(/\s+/g, "-"));
 
   return (
     <main className="home-container">
@@ -76,14 +118,55 @@ function HomePage() {
                     {selectedPoint.name}
                   </Link>
                 </h2>
-                <p>Rzeka: {selectedPoint.river}</p>
+                <p>
+                  Rzeka:{" "}
+                  <Link
+                    to={`/river/${riverSlug(selectedPoint.river)}`}
+                    className="river-link"
+                  >
+                    {selectedPoint.river}
+                  </Link>
+                </p>
                 <p>Ostatni pomiar: {selectedPoint.waterLevel} cm</p>
                 <StationChart selectedPoint={selectedPoint} />
+                {filterRiver && (
+                  <button
+                    className="clear-filter-btn"
+                    onClick={clearFilter}
+                  >
+                    <FaTimesCircle size={14} />&nbsp;Wyczyść filtr
+                  </button>
+                )}
               </>
             ) : (
               <div className="no-selection">
-                <p>Nie wybrano jeszcze punktu na mapie&nbsp;🗺️</p>
-                <small>Wybierz marker lub skorzystaj z wyszukiwarki</small>
+                {filterRiver ? (
+                  <>
+                    <p>
+                      Filtruję stacje dla rzeki:&nbsp;
+                      <Link
+                        to={`/river/${riverSlug(filterRiver)}`}
+                        className="river-link"
+                      >
+                        {filterRiver}
+                      </Link>
+                    </p>
+                    <button
+                      className="clear-filter-btn"
+                      onClick={clearFilter}
+                    >
+                      <FaTimesCircle size={14} />&nbsp;Wyczyść filtr
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <p>
+                      Nie wybrano jeszcze punktu na mapie&nbsp;
+                      <FaMapMarkedAlt size={24} color="#888" />
+                    </p>
+                    <small>Wybierz marker lub skorzystaj z wyszukiwarki</small>
+                  </>
+                )}
               </div>
             )}
           </div>
@@ -93,6 +176,7 @@ function HomePage() {
           <MapView
             selectedPoint={selectedPoint}
             setSelectedPoint={setSelectedPoint}
+            filterRiver={filterRiver}
           />
 
           <div className="legend">

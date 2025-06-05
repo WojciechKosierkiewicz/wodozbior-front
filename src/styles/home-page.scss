@@ -31,6 +31,16 @@
             margin-top: 0.5rem;
         }
 
+        .river-link {
+          font-weight: 600;
+          color: $accent;
+          text-decoration: none;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+
         .selected-point-title {
           font-weight: 500;
           color: $dark_blue;
@@ -56,10 +66,58 @@
           justify-content: center;
           align-items: center;
           color: $common_text;
-          gap: .4rem;
+          gap: .5rem;
+
+          p {
+            display: flex;
+            align-items: center;
+            font-size: 1.2rem;
+            line-height: 1;
+            gap: 0.5rem;
+            margin: 0;
+            color: $common_text;
+          }
 
           small {
             font-size: .9rem;
+          }
+
+          .clear-filter-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+
+            margin-top: 0.8rem;
+
+            padding: 0.4rem 0.8rem;
+            font-size: 0.95rem;
+            font-weight: 500;
+            line-height: 1;
+
+            color: $white;
+            background-color: $accent;
+            border: none;
+            border-radius: 12px;
+
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+
+            transition: background-color 0.2s ease, transform 0.1s ease;
+            
+            &:hover {
+              background-color: darken($accent, 10%);
+              transform: translateY(-1px);
+            }
+
+            &:active {
+              transform: translateY(0);
+              box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+            }
+
+            svg {
+              color: $white;
+              vertical-align: middle;
+            }
           }
         }
 

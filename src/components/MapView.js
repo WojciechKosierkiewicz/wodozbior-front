@@ -63,7 +63,7 @@ function ResetViewControl() {
   return null;
 }
 
-function MapView({ selectedPoint, setSelectedPoint }) {
+function MapView({ selectedPoint, setSelectedPoint, filterRiver }) {
   return (
       <MapContainer
         center={[52, 19]}
@@ -80,25 +80,40 @@ function MapView({ selectedPoint, setSelectedPoint }) {
       <ResetViewControl />
 
       <MarkerClusterGroup chunkedLoading>
-        {combinedPoints.map((p) => (
-          <Marker
-            key={p.id}
-            position={[p.lat, p.lon]}
-            icon={createColoredIcon(p.color)}
-            eventHandlers={{ click: () => setSelectedPoint(p) }}
-          >
-            <Tooltip direction="top" offset={[0, -10]} opacity={1}>
-              {p.name}
-            </Tooltip>
-            <Popup>
-              <strong>{p.name}</strong>
-              <br />
-              Rzeka: {p.river}
-              <br />
-              Pomiar: {p.waterLevel} cm
-            </Popup>
-          </Marker>
-        ))}
+        {combinedPoints
+          // *** TUTAJ robimy filtrowanie po rzece, jeśli filterRiver !== null ***
+          .filter((p) => {
+            // Jeśli filterRiver jest ustawiony → wyświetl tylko te, które mają tę samą rzekę
+            if (filterRiver) {
+              return p.river.toLowerCase() === filterRiver.toLowerCase();
+            }
+            // Jeśli filterRiver jest null → wyświetl wszystko
+            return true;
+          })
+          .map((p) => (
+            <Marker
+              key={p.id}
+              position={[p.lat, p.lon]}
+              icon={createColoredIcon(p.color)}
+              eventHandlers={{
+                click: () => {
+                  // klikając marker → ustawiamy go jako selectedPoint
+                  setSelectedPoint(p);
+                },
+              }}
+            >
+              <Tooltip direction="top" offset={[0, -10]} opacity={1}>
+                {p.name}
+              </Tooltip>
+              <Popup>
+                <strong>{p.name}</strong>
+                <br />
+                Rzeka: {p.river}
+                <br />
+                Pomiar: {p.waterLevel} cm
+              </Popup>
+            </Marker>
+          ))}
       </MarkerClusterGroup>
 
       {selectedPoint && (
