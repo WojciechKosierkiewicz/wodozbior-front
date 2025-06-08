@@ -1,0 +1,155 @@
+@import "./variables.scss";
+
+.river-details-container {
+    background-color: $main_background;
+    min-height: 85vh;
+
+    .details-container {
+        padding: 2rem;
+
+        .all-details {
+            .breadcrumbs {
+                font-size: .9rem;
+                margin-bottom: .6rem;
+                color: $common_text;
+
+                a {
+                    color: $accent;
+                    text-decoration: none;
+
+                    &:hover {
+                    text-decoration: underline;
+                    }
+                }
+            }
+            .river-title {
+                font-size: 2.4rem;
+                font-weight: 700;
+                color: $dark_blue;
+                margin-bottom: 1rem;
+            }
+
+            .stat-chips {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 1rem;
+                margin-bottom: 2rem;
+                padding: 0;
+                list-style: none;
+
+                li {
+                    background: $white;
+                    padding: .8rem 1.4rem;
+                    border-radius: 24px;
+                    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+                    display: flex;
+                    gap: .5rem;
+                    align-items: baseline;
+                    font-size: 1.05rem;
+
+                    strong {
+                    font-weight: 600;
+                    color: $dark_blue;
+                    }
+
+                    span {
+                    font-weight: 500;
+                    color: $accent;
+                    }
+                }
+            }
+
+            .overview {
+                display: grid;
+                grid-template-columns: 3fr 2fr;
+                gap: 1.5rem;
+                margin-bottom: 2rem;
+                .box {
+                    background: $white;
+                    border-radius: 16px;
+                    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+                    padding: 1.2rem;
+                }
+                
+                .overview-chart {
+                    .chart-toggle {
+                        display: flex;
+                        gap: 0.5rem;
+                        margin-bottom: 1rem;
+                        button {
+                            padding: 0.5rem 1rem;
+                            border: 1px solid $accent;
+                            border-radius: 8px;
+                            background-color: transparent;
+                            color: $accent;
+                            font-weight: 500;
+                            cursor: pointer;
+                            transition: background-color 0.2s, color 0.2s;
+
+                            &.active {
+                            background-color: $accent;
+                            color: white;
+                            }
+
+                            &:hover:not(.active) {
+                            background-color: $accent-light;
+                            color: $dark_blue;
+                            }
+                        }
+                    }
+                }
+                .overview-map {
+                    background: $white;
+                    border-radius: 16px;
+                    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+                    overflow: hidden;
+                }
+            }
+
+            .stations-list {
+                background-color: $white;
+                padding: 2rem;
+                border-radius: 16px;
+                box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+                h2 {
+                    margin-bottom: 1rem;
+                    color: $dark_blue;
+                }
+                .stations-cards {
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+                    gap: 1.5rem;
+                }
+                .station-card {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    background-color: $white;
+                    border-radius: 12px;
+                    padding: 1rem 1.2rem;
+                    text-decoration: none;
+                    border: 1px solid lighten($accent, 20%);
+                    box-shadow: 0 2px 6px rgba(14, 165, 233, 0.05);
+                    transition: transform 0.2s, box-shadow 0.2s;
+
+                    &:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 4px 14px rgba(14, 165, 233, 0.2);
+                    }
+
+                    h3 {
+                        font-size: 1.1rem;
+                        margin: 0;
+                        margin-bottom: 0.5rem;
+                        color: $dark_blue;
+                        font-weight: 600;
+                    }
+                    .val {
+                        font-size: 1.1rem;
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+    }
+}

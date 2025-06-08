@@ -26,6 +26,33 @@ export const exampleApi = {
       waterLevel: 200,
       measurementDate: "2023-10-01T12:00:00Z",
       color: "#FFFF00"
+    },
+    {
+      id: "4",
+      river: "Wisła",
+      latitude: 52.55,
+      longitude: 21.75,
+      waterLevel: 230,
+      measurementDate: "2023-10-01T12:00:00Z",
+      color: "#FFFF00"
+    },
+    {
+      id: "5",
+      river: "Wisła",
+      latitude: 51.90,
+      longitude: 23.05,
+      waterLevel: 240,
+      measurementDate: "2023-10-01T12:00:00Z",
+      color: "#00FF00"
+    },
+    {
+      id: "6",
+      river: "Wisła",
+      latitude: 53.25,
+      longitude: 23.05,
+      waterLevel: 260,
+      measurementDate: "2023-10-01T12:00:00Z",
+      color: "#00FF00"
     }
   ],
 
