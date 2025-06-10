@@ -5,8 +5,19 @@ import "../styles/stations-page.scss";
 import { normalize } from "../utils/text";
 import { exampleApi } from "../mockApidata";
 
+
+const stationsapi = await fetch('https://wody.nowaccy.cloud/api/hydrodata/stations')
+  .then(response => response.json())
+  .then(data => data.map(station => ({
+    id: station.id,
+    name: station.name || `Stacja ${station.id}`,
+    river: station.river,
+    waterLevel: station.waterLevel,
+    color: station.color || "#0EA5E9"
+  })));
+
 // scalone dane stacji
-const combinedStations = exampleApi.stations.map((station) => ({
+const combinedStations = stationsapi.map((station) => ({
   id: station.id,
   name:
     station.id === exampleApi.singleStation.id

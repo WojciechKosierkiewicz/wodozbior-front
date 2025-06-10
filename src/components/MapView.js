@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -10,7 +10,6 @@ import {
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
 import "../styles/map-view.scss";
-import { exampleApi } from "../mockApidata";
 
 const createColoredIcon = (color) =>
   L.divIcon({
@@ -19,24 +18,6 @@ const createColoredIcon = (color) =>
     iconSize: [16, 16],
     iconAnchor: [8, 8]
   });
-
-const combinedPoints = exampleApi.stations.map((station) => ({
-  id: station.id,
-  name: station.id === exampleApi.singleStation.id
-    ? exampleApi.singleStation.name
-    : "Stacja " + station.id,
-  river: station.river,
-  lat: station.latitude,
-  lon: station.longitude,
-  waterLevel: station.waterLevel,
-  color: station.color || "#0EA5E9"
-}));
-
-const pulseIcon = L.divIcon({
-  html: '<span class="pulse-ring"></span>',
-  className: "pulse-icon",
-  iconSize: [0, 0]
-});
 
 function FlyToPoint({ point }) {
   const map = useMap();
@@ -64,13 +45,46 @@ function ResetViewControl() {
 }
 
 function MapView({ selectedPoint, setSelectedPoint, filterRiver }) {
+  const [combinedPoints, setCombinedPoints] = useState([]);
+
+  useEffect(() => {
+    const fetchStations = async () => {
+      try {
+        const response = await fetch('https://wody.nowaccy.cloud/api/hydrodata/stations/list');
+        if (!response.ok) throw new Error('Failed to fetch stations');
+        const stations = await response.json();
+        
+        const points = stations.map(station => ({
+          id: station.id,
+          name: station.name,
+          lat: station.latitude,
+          lon: station.longitude,
+          waterLevel: station.waterLevel,
+          color: "#0EA5E9" // Default color for all stations
+        }));
+        
+        setCombinedPoints(points);
+      } catch (error) {
+        console.error('Error fetching stations:', error);
+      }
+    };
+
+    fetchStations();
+  }, []);
+
+  const pulseIcon = L.divIcon({
+    html: '<span class="pulse-ring"></span>',
+    className: "pulse-icon",
+    iconSize: [0, 0]
+  });
+
   return (
-      <MapContainer
-        center={[52, 19]}
-        zoom={6}
-        style={{ height: "100%", width: "100%" }}
-        scrollWheelZoom
-      >
+    <MapContainer
+      center={[52, 19]}
+      zoom={6}
+      style={{ height: "100%", width: "100%" }}
+      scrollWheelZoom
+    >
       <TileLayer
         url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         attribution='&copy; <a href="https://carto.com/attributions">CARTO</a>'
@@ -81,13 +95,10 @@ function MapView({ selectedPoint, setSelectedPoint, filterRiver }) {
 
       <MarkerClusterGroup chunkedLoading>
         {combinedPoints
-          // *** TUTAJ robimy filtrowanie po rzece, jeśli filterRiver !== null ***
           .filter((p) => {
-            // Jeśli filterRiver jest ustawiony → wyświetl tylko te, które mają tę samą rzekę
             if (filterRiver) {
-              return p.river.toLowerCase() === filterRiver.toLowerCase();
+              return p.river?.toLowerCase() === filterRiver.toLowerCase();
             }
-            // Jeśli filterRiver jest null → wyświetl wszystko
             return true;
           })
           .map((p) => (
@@ -97,7 +108,6 @@ function MapView({ selectedPoint, setSelectedPoint, filterRiver }) {
               icon={createColoredIcon(p.color)}
               eventHandlers={{
                 click: () => {
-                  // klikając marker → ustawiamy go jako selectedPoint
                   setSelectedPoint(p);
                 },
               }}
@@ -107,8 +117,6 @@ function MapView({ selectedPoint, setSelectedPoint, filterRiver }) {
               </Tooltip>
               <Popup>
                 <strong>{p.name}</strong>
-                <br />
-                Rzeka: {p.river}
                 <br />
                 Pomiar: {p.waterLevel} cm
               </Popup>

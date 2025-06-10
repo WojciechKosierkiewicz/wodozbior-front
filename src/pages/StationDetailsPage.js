@@ -1,19 +1,60 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { exampleApi } from "../mockApidata";
 import "../styles/station-details-page.scss";
 import StationChart from "../components/StationChart";
 import MapView from "../components/MapView";
 
 function StationDetailsPage() {
   const { id } = useParams();
-  const station = exampleApi.singleStation;
-
+  const [station, setStation] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [chartType, setChartType] = useState("waterLevel");
+  const [chartData, setChartData] = useState([]);
+  useEffect(() => {
+    const fetchStationData = async () => {
+      try {
+        const response = await fetch(`https://wody.nowaccy.cloud/api/hydrodata/stations/${id}`);
+        if (!response.ok) throw new Error('Failed to fetch station data');
+        const stationData = await response.json();
+        setStation(stationData);
+        
+        // Calculate date range for last month
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setMonth(startDate.getMonth() - 1);
+        
+        // Format dates as YYYY-MM-DD
+        const formatDate = (date) => {
+          return date.toISOString().split('T')[0];
+        };
 
-  const stationName = station?.name || `Stacja ${id}`;
-  const riverName = station?.river || "Nieznana rzeka";
-  const region = station?.region || "Brak danych";
+        const chartResponse = await fetch(
+          `https://wody.nowaccy.cloud/api/hydrodata/stations/${id}/chart?startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`
+        );
+        if (!chartResponse.ok) throw new Error('Failed to fetch chart data');
+        const chartData = await chartResponse.json();
+        setChartData(chartData[chartType] || []);
+      } catch (error) {
+        console.error('Error fetching station data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStationData();
+  }, [id]);
+
+  if (loading) {
+    return <div>Ładowanie...</div>;
+  }
+
+  if (!station) {
+    return <div>Nie znaleziono stacji</div>;
+  }
+
+  const stationName = station.name || `Stacja ${id}`;
+  const riverName = station.river || "Nieznana rzeka";
+  const region = station.region || "Brak danych";
 
   const formatDate = (dateStr) => {
     if (!dateStr) return "brak daty";
@@ -27,13 +68,6 @@ function StationDetailsPage() {
     });
   };
 
-  const chartData = useMemo(() => {
-    return exampleApi.stationChart[chartType]?.map((entry) => ({
-      date: entry.date,
-      value: entry.value
-    })) || [];
-  }, [chartType]);
-
   const unitMap = {
     waterLevel: "cm",
     waterTemperature: "°C",
@@ -46,10 +80,7 @@ function StationDetailsPage() {
     waterFlow: "Przepływ wody (m³/s)"
   };
 
-const stationColor = useMemo(() => {
-  const match = exampleApi.stations.find((s) => s.id === station.id);
-  return match?.color || "#0EA5E9";
-}, [station.id]);
+  const stationColor = "#0EA5E9"; // Default color
 
   return (
     <main className="station-details-container">
@@ -80,15 +111,11 @@ const stationColor = useMemo(() => {
                   <span className="date">{formatDate(station.waterTemperatureDate)}</span>
                 </li>
                 <li>
-                  <strong>Przepływ:</strong> {station.waterFlow ?? "brak danych"} m³/s
-                  <span className="date">{formatDate(station.waterFlowDate)}</span>
-                </li>
-                <li>
-                  <strong>Zjawisko lodowe:</strong> {station.icePhenomenon ?? "brak danych"}
+                  <strong>Zjawisko lodowe:</strong> {station.icePhenomenon === "0" ? "Brak" : station.icePhenomenon ?? "brak danych"}
                   <span className="date">{formatDate(station.icePhenomenonDate)}</span>
                 </li>
                 <li>
-                  <strong>Roślinność:</strong> {station.overgrowthPhenomenon ?? "brak danych"}
+                  <strong>Roślinność:</strong> {station.overgrowthPhenomenon === "0" ? "Brak" : station.overgrowthPhenomenon ?? "brak danych"}
                   <span className="date">{formatDate(station.overgrowthPhenomenonDate)}</span>
                 </li>
               </ul>
@@ -114,12 +141,6 @@ const stationColor = useMemo(() => {
                   onClick={() => setChartType("waterTemperature")}
                 >
                   Temperatura
-                </button>
-                <button
-                  className={chartType === "waterFlow" ? "active" : ""}
-                  onClick={() => setChartType("waterFlow")}
-                >
-                  Przepływ
                 </button>
               </div>
               <StationChart

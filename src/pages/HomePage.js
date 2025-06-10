@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { FaMapMarkedAlt, FaTimesCircle } from "react-icons/fa";
 
@@ -6,60 +6,54 @@ import MapView      from "../components/MapView";
 import SearchInput  from "../components/SearchInput";
 import StationChart from "../components/StationChart";
 
-import { exampleApi } from "../mockApidata";
 import "../styles/home-page.scss";
 
 function HomePage() {
   const [searchTerm,    setSearchTerm]    = useState("");
   const [selectedPoint, setSelectedPoint] = useState(null);
-  const [filterRiver,   setFilterRiver]   = useState(null);
-  const [chartType,     setChartType]     = useState("waterLevel");
+  const [stations, setStations] = useState([]);
 
   const combinedPoints = useMemo(
     () =>
-      exampleApi.stations.map((station) => ({
+      stations.map((station) => ({
         id: station.id,
-        name: station.name?.trim() || `Stacja ${station.id}`,
-        river: station.river,
+        name: station.name,
         lat: station.latitude,
         lon: station.longitude,
         waterLevel: station.waterLevel,
-        color: station.color || "#0EA5E9",
+        color: "#0EA5E9",
       })),
-    []
+    [stations]
   );
 
-  const rivers   = useMemo(
-    () => [...new Set(exampleApi.stations.map(s => s.river))],
-    []
+  const stationNames = useMemo(
+    () => stations.map(s => s.name),
+    [stations]
   );
 
-  const stations = useMemo(
-    () => exampleApi.stations.map(
-      s => s.name?.trim() || `Stacja ${s.id}`),
-    []
-  );
+  useEffect(() => {
+    const fetchStations = async () => {
+      try {
+        const response = await fetch('https://wody.nowaccy.cloud/api/hydrodata/stations/list');
+        if (!response.ok) throw new Error('Failed to fetch stations');
+        const data = await response.json();
+        setStations(data);
+      } catch (error) {
+        console.error('Error fetching stations:', error);
+      }
+    };
+
+    fetchStations();
+  }, []);
 
   const suggestions = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
     if (!q) return [];
 
-    const riversMatch = rivers.filter(r => r.toLowerCase().startsWith(q));
-
-    const stationsOnMatchedRivers = exampleApi.stations
-      .filter(s => riversMatch.includes(s.river))
-      .map(s => s.name?.trim() || `Stacja ${s.id}`);
-
-    const stationsMatch = stations.filter(name =>
+    return stationNames.filter(name =>
       name.toLowerCase().includes(q)
     );
-
-    return [...new Set([
-      ...riversMatch,
-      ...stationsOnMatchedRivers,
-      ...stationsMatch
-    ])];
-  }, [searchTerm, rivers, stations]);
+  }, [searchTerm, stationNames]);
 
   const handleSuggestion = (picked) => {
     setSearchTerm(picked);
@@ -69,28 +63,13 @@ function HomePage() {
     );
     if (foundStation) {
       setSelectedPoint(foundStation);
-      setFilterRiver(null);
-      return;
-    }
-
-    const isRiver = rivers.some(
-      (r) => r.toLowerCase() === picked.toLowerCase()
-    );
-    if (isRiver) {
-      setFilterRiver(picked);
-      setSelectedPoint(null);
-      return;
     }
   };
 
   const clearFilter = () => {
-    setFilterRiver(null);
     setSearchTerm("");
     setSelectedPoint(null);
   };
-
-  const riverSlug = (riverName) =>
-    encodeURIComponent(riverName.toLowerCase().replace(/\s+/g, "-"));
 
   return (
     <main className="home-container">
@@ -99,7 +78,7 @@ function HomePage() {
           <SearchInput
             value={searchTerm}
             onChange={setSearchTerm}
-            placeholder="Wyszukaj rzeki / stacje"
+            placeholder="Wyszukaj stacje"
             suggestions={suggestions}
             onSuggestionClick={handleSuggestion}
           />
@@ -119,80 +98,30 @@ function HomePage() {
                     {selectedPoint.name}
                   </Link>
                 </h2>
-                <p>
-                  Rzeka:{" "}
-                  <Link
-                    to={`/river/${riverSlug(selectedPoint.river)}`}
-                    className="river-link"
-                  >
-                    {selectedPoint.river}
-                  </Link>
-                </p>
                 <p>Ostatni pomiar poziomu wody: {selectedPoint.waterLevel} cm</p>
 
                 <div className="chart-toggle">
                   <button
-                    className={chartType === "waterLevel" ? "active" : ""}
-                    onClick={() => setChartType("waterLevel")}
+                    className="active"
                   >
                     Poziom wody
-                  </button>
-                  <button
-                    className={chartType === "waterTemperature" ? "active" : ""}
-                    onClick={() => setChartType("waterTemperature")}
-                  >
-                    Temperatura
-                  </button>
-                  <button
-                    className={chartType === "waterFlow" ? "active" : ""}
-                    onClick={() => setChartType("waterFlow")}
-                  >
-                    Przepływ
                   </button>
                 </div>
 
                 <StationChart
                   selectedPoint={selectedPoint}
-                  chartType={chartType}
+                  chartType="waterLevel"
                 />
-                {filterRiver && (
-                  <button
-                    className="clear-filter-btn"
-                    onClick={clearFilter}
-                  >
-                    <FaTimesCircle size={14} />&nbsp;Wyczyść filtr
-                  </button>
-                )}
               </>
             ) : (
               <div className="no-selection">
-                {filterRiver ? (
-                  <>
-                    <p>
-                      Filtruję stacje dla rzeki:&nbsp;
-                      <Link
-                        to={`/river/${riverSlug(filterRiver)}`}
-                        className="river-link"
-                      >
-                        {filterRiver}
-                      </Link>
-                    </p>
-                    <button
-                      className="clear-filter-btn"
-                      onClick={clearFilter}
-                    >
-                      <FaTimesCircle size={14} />&nbsp;Wyczyść filtr
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <p>
-                      Nie wybrano jeszcze punktu na mapie&nbsp;
-                      <FaMapMarkedAlt size={24} color="#888" />
-                    </p>
-                    <small>Wybierz marker lub skorzystaj z wyszukiwarki</small>
-                  </>
-                )}
+                <>
+                  <p>
+                    Nie wybrano jeszcze punktu na mapie&nbsp;
+                    <FaMapMarkedAlt size={24} color="#888" />
+                  </p>
+                  <small>Wybierz marker lub skorzystaj z wyszukiwarki</small>
+                </>
               </div>
             )}
           </div>
@@ -202,7 +131,6 @@ function HomePage() {
           <MapView
             selectedPoint={selectedPoint}
             setSelectedPoint={setSelectedPoint}
-            filterRiver={filterRiver}
           />
 
           <div className="legend">
