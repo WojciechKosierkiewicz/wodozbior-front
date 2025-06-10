@@ -72,7 +72,7 @@ function StationChart({ selectedPoint, chartType, customTitle, customColor, cust
       </h3>
       <ResponsiveContainer width="100%" height={250}>
         <LineChart data={chartData}>
-          <XAxis dataKey="date" tick={{ fontSize: 12 }} interval={0} />
+          <XAxis dataKey="date" tick={{ fontSize: 12 }} interval="preserveStartEnd" minTickGap={30} />
           <YAxis width={50} tick={{ fontSize: 12 }} />
           <Tooltip content={<CustomTooltip unit={unit} />} />
           <Line
