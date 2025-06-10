@@ -60,7 +60,8 @@ function MapView({ selectedPoint, setSelectedPoint, filterRiver }) {
           lat: station.latitude,
           lon: station.longitude,
           waterLevel: station.waterLevel,
-          color: station.color
+          color: station.color,
+          river: station.river
         }));
         
         setCombinedPoints(points);

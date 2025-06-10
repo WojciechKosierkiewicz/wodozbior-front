@@ -8,7 +8,7 @@ const routes = [
   { path: "/", element: <HomePage /> },
   { path: "/rivers", element: <RiversPage /> },
   { path: "/stations", element: <StationsPage /> },
-  { path: "/river/:id", element: <RiverDetailsPage /> },
+  { path: "/river/:riverName", element: <RiverDetailsPage /> },
   { path: "/station/:id", element: <StationDetailsPage /> }
 ];
 

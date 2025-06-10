@@ -8,7 +8,7 @@ function RiverList({ rivers }) {
     <ul className="river-list">
       {rivers.map(({ id, name, stationCount }) => (
         <li key={id} className="river-item">
-          <Link to={`/river/${id}`}>
+          <Link to={`/river/${encodeURIComponent(name.toLowerCase().replace(/\s+/g, '-'))}`}>
             <BsDropletFill     className="river-icon" size={20} color="#0EA5E9" />
             <div className="river-info">
               <span className="river-name">{name}</span>
