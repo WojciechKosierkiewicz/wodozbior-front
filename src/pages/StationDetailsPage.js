@@ -10,6 +10,10 @@ function StationDetailsPage() {
   const [loading, setLoading] = useState(true);
   const [chartType, setChartType] = useState("waterLevel");
   const [chartData, setChartData] = useState([]);
+  const [hasTemperatureData, setHasTemperatureData] = useState(false);
+  const [hasWaterFlowData, setHasWaterFlowData] = useState(false);
+  const [rawChartData, setRawChartData] = useState(null);
+
   useEffect(() => {
     const fetchStationData = async () => {
       try {
@@ -33,6 +37,19 @@ function StationDetailsPage() {
         );
         if (!chartResponse.ok) throw new Error('Failed to fetch chart data');
         const chartData = await chartResponse.json();
+        
+        // Store raw chart data
+        setRawChartData(chartData);
+        
+        // Check if temperature and water flow data exists
+        setHasTemperatureData(chartData.waterTemperature?.length > 0);
+        
+        // Check if water flow data exists and is not all zeros
+        const hasValidWaterFlow = chartData.waterFlow?.length > 0 && 
+          !chartData.waterFlow.every(entry => entry.value === 0);
+        setHasWaterFlowData(hasValidWaterFlow);
+        
+        // Set initial chart data
         setChartData(chartData[chartType] || []);
       } catch (error) {
         console.error('Error fetching station data:', error);
@@ -43,6 +60,13 @@ function StationDetailsPage() {
 
     fetchStationData();
   }, [id]);
+
+  // Update chart data when chart type changes
+  useEffect(() => {
+    if (rawChartData) {
+      setChartData(rawChartData[chartType] || []);
+    }
+  }, [chartType, rawChartData]);
 
   if (loading) {
     return <div>Ładowanie...</div>;
@@ -136,12 +160,22 @@ function StationDetailsPage() {
                 >
                   Poziom wody
                 </button>
-                <button
-                  className={chartType === "waterTemperature" ? "active" : ""}
-                  onClick={() => setChartType("waterTemperature")}
-                >
-                  Temperatura
-                </button>
+                {hasTemperatureData && (
+                  <button
+                    className={chartType === "waterTemperature" ? "active" : ""}
+                    onClick={() => setChartType("waterTemperature")}
+                  >
+                    Temperatura
+                  </button>
+                )}
+                {hasWaterFlowData && (
+                  <button
+                    className={chartType === "waterFlow" ? "active" : ""}
+                    onClick={() => setChartType("waterFlow")}
+                  >
+                    Przepływ
+                  </button>
+                )}
               </div>
               <StationChart
                 customTitle={titleMap[chartType]}

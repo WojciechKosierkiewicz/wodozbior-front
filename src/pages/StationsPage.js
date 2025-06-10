@@ -10,7 +10,7 @@ const stationsapi = await fetch('https://wody.nowaccy.cloud/api/hydrodata/statio
   .then(response => response.json())
   .then(data => data.map(station => ({
     id: station.id,
-    name: station.name || `Stacja ${station.id}`,
+    name: station.stationName || `!>!@Stacja ${station.id}`,
     river: station.river,
     waterLevel: station.waterLevel,
     color: station.color || "#0EA5E9"
@@ -19,10 +19,7 @@ const stationsapi = await fetch('https://wody.nowaccy.cloud/api/hydrodata/statio
 // scalone dane stacji
 const combinedStations = stationsapi.map((station) => ({
   id: station.id,
-  name:
-    station.id === exampleApi.singleStation.id
-      ? exampleApi.singleStation.name
-      : `Stacja ${station.id}`,
+  name: station.name,
   river: station.river,
   waterLevel: station.waterLevel,
   color: station.color || "#0EA5E9"

@@ -50,17 +50,17 @@ function MapView({ selectedPoint, setSelectedPoint, filterRiver }) {
   useEffect(() => {
     const fetchStations = async () => {
       try {
-        const response = await fetch('https://wody.nowaccy.cloud/api/hydrodata/stations/list');
+        const response = await fetch('https://wody.nowaccy.cloud/api/hydrodata/stations');
         if (!response.ok) throw new Error('Failed to fetch stations');
         const stations = await response.json();
         
         const points = stations.map(station => ({
           id: station.id,
-          name: station.name,
+          name: station.stationName,
           lat: station.latitude,
           lon: station.longitude,
           waterLevel: station.waterLevel,
-          color: "#0EA5E9" // Default color for all stations
+          color: station.color
         }));
         
         setCombinedPoints(points);

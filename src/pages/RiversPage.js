@@ -5,10 +5,19 @@ import "../styles/rivers-page.scss";
 import { normalize } from "../utils/text";
 import { exampleApi } from "../mockApidata";
 
-const apiRivers = exampleApi.riversWithStations.map(({ first, second }) => ({
-  id: first.toLowerCase(),
-  name: first,
-  stationCount: second.length,
+
+const riversapi = await fetch('https://wody.nowaccy.cloud/api/hydrodata/rivers')
+  .then(response => response.json())
+  .then(data => data.map(river => ({
+    id: river.id.toString(),
+    name: river.name,
+    stationCount: river.stations.length
+  })));
+
+const apiRivers = riversapi.map(river => ({
+  id: river.id,
+  name: river.name,
+  stationCount: river.stationCount,
 }));
 
 function RiversPage() {
