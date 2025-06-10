@@ -12,6 +12,11 @@ export default function RiverDetailsPage() {
   const [stations, setStations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedStation, setSelectedStation] = useState(null);
+  const [chartData, setChartData] = useState([]);
+  const [hasTemperatureData, setHasTemperatureData] = useState(false);
+  const [hasWaterFlowData, setHasWaterFlowData] = useState(false);
+  const [rawChartData, setRawChartData] = useState(null);
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -57,16 +62,67 @@ export default function RiverDetailsPage() {
     fetchStations();
   }, [riverName]);
 
+  // Fetch chart data when a station is selected
+  useEffect(() => {
+    const fetchChartData = async () => {
+      if (!selectedStation) {
+        setChartData([]);
+        setRawChartData(null);
+        setHasTemperatureData(false);
+        setHasWaterFlowData(false);
+        return;
+      }
+
+      try {
+        // Calculate date range for last month
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setMonth(startDate.getMonth() - 1);
+        
+        // Format dates as YYYY-MM-DD
+        const formatDate = (date) => {
+          return date.toISOString().split('T')[0];
+        };
+
+        const chartResponse = await fetch(
+          `https://wody.nowaccy.cloud/api/hydrodata/stations/${selectedStation.id}/chart?startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`
+        );
+        if (!chartResponse.ok) throw new Error('Failed to fetch chart data');
+        const data = await chartResponse.json();
+        
+        // Store raw chart data
+        setRawChartData(data);
+        
+        // Check if temperature and water flow data exists
+        setHasTemperatureData(data.waterTemperature?.length > 0);
+        
+        // Check if water flow data exists and is not all zeros
+        const hasValidWaterFlow = data.waterFlow?.length > 0 && 
+          !data.waterFlow.every(entry => entry.value === 0);
+        setHasWaterFlowData(hasValidWaterFlow);
+        
+        // Set initial chart data
+        setChartData(data[chartType] || []);
+      } catch (error) {
+        console.error('Error fetching chart data:', error);
+        setChartData([]);
+      }
+    };
+
+    fetchChartData();
+  }, [selectedStation]);
+
+  // Update chart data when chart type changes
+  useEffect(() => {
+    if (rawChartData) {
+      setChartData(rawChartData[chartType] || []);
+    }
+  }, [chartType, rawChartData]);
+
   const riverStations = useMemo(
     () => stations,
     [stations]
   );
-
-  const chartData = useMemo(() => {
-    // Since we don't have historical data in the API response yet,
-    // we'll return empty data for now
-    return [];
-  }, [riverStations, chartType]);
 
   const latestValues = riverStations.map(s => s.waterLevel).filter(level => level !== null);
   const minLevel = latestValues.length ? Math.min(...latestValues) : 0;
@@ -80,9 +136,9 @@ export default function RiverDetailsPage() {
   };
 
   const titleMap = {
-    waterLevel: "Średni poziom wody (cm)",
-    waterTemperature: "Średnia temperatura wody (°C)",
-    waterFlow: "Średni przepływ wody (m³/s)"
+    waterLevel: "Poziom wody (cm)",
+    waterTemperature: "Temperatura wody (°C)",
+    waterFlow: "Przepływ wody (m³/s)"
   };
 
   if (loading) {
@@ -116,18 +172,22 @@ export default function RiverDetailsPage() {
                             >
                                 Poziom wody
                             </button>
-                            <button
-                                className={chartType === "waterTemperature" ? "active" : ""}
-                                onClick={() => setChartType("waterTemperature")}
-                            >
-                                Temperatura
-                            </button>
-                            <button
-                                className={chartType === "waterFlow" ? "active" : ""}
-                                onClick={() => setChartType("waterFlow")}
-                            >
-                                Przepływ
-                            </button>
+                            {hasTemperatureData && (
+                                <button
+                                    className={chartType === "waterTemperature" ? "active" : ""}
+                                    onClick={() => setChartType("waterTemperature")}
+                                >
+                                    Temperatura
+                                </button>
+                            )}
+                            {hasWaterFlowData && (
+                                <button
+                                    className={chartType === "waterFlow" ? "active" : ""}
+                                    onClick={() => setChartType("waterFlow")}
+                                >
+                                    Przepływ
+                                </button>
+                            )}
                         </div>
 
                         <StationChart
@@ -138,7 +198,17 @@ export default function RiverDetailsPage() {
                         />
                     </div>
                     <div className="overview-map">
-                        <MapView filterRiver={riverName} setSelectedPoint={() => {}} />
+                        <MapView 
+                            filterRiver={riverName} 
+                            setSelectedPoint={(point) => {
+                                if (point) {
+                                    const station = stations.find(s => s.id === point.id);
+                                    setSelectedStation(station);
+                                } else {
+                                    setSelectedStation(null);
+                                }
+                            }} 
+                        />
                     </div>
                 </div>
 
