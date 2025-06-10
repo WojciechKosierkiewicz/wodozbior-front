@@ -22,7 +22,7 @@ export default function RiverDetailsPage() {
     const fetchStations = async () => {
       try {
         // Fetch basic station list
-        const response = await fetch(`https://wody.nowaccy.cloud/api/hydrodata/stations/related?riverName=${encodeURIComponent(riverName)}`);
+        const response = await fetch(`https://śpiwory.nowaccy.cloud/api/hydrodata/stations/related?riverName=${encodeURIComponent(riverName)}`);
         if (!response.ok) {
           throw new Error('Failed to fetch stations data');
         }
@@ -32,7 +32,7 @@ export default function RiverDetailsPage() {
         const detailedStations = await Promise.all(
           basicStations.map(async (station) => {
             try {
-              const detailResponse = await fetch(`https://wody.nowaccy.cloud/api/hydrodata/stations/${station.id}`);
+              const detailResponse = await fetch(`https://śpiwory.nowaccy.cloud/api/hydrodata/stations/${station.id}`);
               if (!detailResponse.ok) {
                 return station; // Return basic station if detailed fetch fails
               }
@@ -85,7 +85,7 @@ export default function RiverDetailsPage() {
         };
 
         const chartResponse = await fetch(
-          `https://wody.nowaccy.cloud/api/hydrodata/stations/${selectedStation.id}/chart?startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`
+          `https://śpiwory.nowaccy.cloud/api/hydrodata/stations/${selectedStation.id}/chart?startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`
         );
         if (!chartResponse.ok) throw new Error('Failed to fetch chart data');
         const data = await chartResponse.json();

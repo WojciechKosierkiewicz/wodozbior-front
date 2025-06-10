@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://wody.nowaccy.cloud/api/hydrodata';
+const API_BASE_URL = 'https://śpiwory.nowaccy.cloud/api/hydrodata';
 
 const api = {
   // Get all stations
