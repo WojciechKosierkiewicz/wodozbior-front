@@ -130,10 +130,12 @@ function StationDetailsPage() {
                   <strong>Poziom wody:</strong> {station.waterLevel ?? "brak danych"} cm
                   <span className="date">{formatDate(station.waterLevelDate)}</span>
                 </li>
-                <li>
-                  <strong>Temperatura:</strong> {station.waterTemperature ?? "brak danych"} °C
-                  <span className="date">{formatDate(station.waterTemperatureDate)}</span>
-                </li>
+                {station.waterTemperature && (
+                  <li>
+                    <strong>Temperatura:</strong> {station.waterTemperature} °C
+                    <span className="date">{formatDate(station.waterTemperatureDate)}</span>
+                  </li>
+                )}
                 <li>
                   <strong>Zjawisko lodowe:</strong> {station.icePhenomenon === "0" ? "Brak" : station.icePhenomenon ?? "brak danych"}
                   <span className="date">{formatDate(station.icePhenomenonDate)}</span>
