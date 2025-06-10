@@ -6,7 +6,7 @@ import { normalize } from "../utils/text";
 import { exampleApi } from "../mockApidata";
 
 
-const riversapi = await fetch('https://śpiwory.nowaccy.cloud/api/hydrodata/rivers')
+const riversapi = await fetch('https://wodyapi.nowaccy.cloud/api/hydrodata/rivers')
   .then(response => response.json())
   .then(data => data.map(river => ({
     id: river.id.toString(),

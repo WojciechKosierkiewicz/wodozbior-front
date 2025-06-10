@@ -17,7 +17,7 @@ function StationDetailsPage() {
   useEffect(() => {
     const fetchStationData = async () => {
       try {
-        const response = await fetch(`https://śpiwory.nowaccy.cloud/api/hydrodata/stations/${id}`);
+        const response = await fetch(`https://wodyapi.nowaccy.cloud/api/hydrodata/stations/${id}`);
         if (!response.ok) throw new Error('Failed to fetch station data');
         const stationData = await response.json();
         setStation(stationData);
@@ -33,7 +33,7 @@ function StationDetailsPage() {
         };
 
         const chartResponse = await fetch(
-          `https://śpiwory.nowaccy.cloud/api/hydrodata/stations/${id}/chart?startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`
+          `https://wodyapi.nowaccy.cloud/api/hydrodata/stations/${id}/chart?startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`
         );
         if (!chartResponse.ok) throw new Error('Failed to fetch chart data');
         const chartData = await chartResponse.json();

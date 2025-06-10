@@ -50,7 +50,7 @@ function MapView({ selectedPoint, setSelectedPoint, filterRiver }) {
   useEffect(() => {
     const fetchStations = async () => {
       try {
-        const response = await fetch('https://śpiwory.nowaccy.cloud/api/hydrodata/stations');
+        const response = await fetch('https://wodyapi.nowaccy.cloud/api/hydrodata/stations');
         if (!response.ok) throw new Error('Failed to fetch stations');
         const stations = await response.json();
         
