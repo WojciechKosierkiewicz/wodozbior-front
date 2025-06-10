@@ -1,0 +1,129 @@
+@import "./variables.scss";
+
+.station-details-container {
+    background-color: $main_background;
+    min-height: 85vh;
+    .details-container {
+        padding: 2rem;
+        .all-details {
+            .breadcrumbs {
+                font-size: .9rem;
+                margin-bottom: .6rem;
+                color: $common_text;
+                a {
+                    color: $accent;
+                    text-decoration: none;
+
+                    &:hover {
+                    text-decoration: underline;
+                    }
+                }
+            }
+            .station-title {
+                font-size: 2.5rem;
+                font-weight: 700;
+                color: $dark_blue;
+            }
+            .station-subtitle {
+                color: $common_text;
+                font-weight: 400;
+                font-size: 1.3rem;
+                strong {
+                    font-weight: 500;
+                }
+                margin-bottom: 1rem;
+            }
+
+            .station-layout {
+                display: flex;
+                justify-content: space-between;
+                gap: 1.5rem;
+                margin-top: 2rem;
+                height: 60vh;
+                align-items: stretch;
+
+                .box {
+                    background: $white;
+                    border-radius: 16px;
+                    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
+                    padding: 1.5rem;
+                    overflow: hidden;
+                }
+
+                .latest-measurements {
+                    width: 25%;
+                    display: flex;
+                    flex-direction: column;
+                    h3 {
+                        font-size: 1.8rem;
+                        margin-bottom: 2rem;
+                        color: $dark_blue;
+                    }
+                    ul {
+                        flex-grow: 1;
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        list-style: none;
+                        padding: 0;
+                        margin: 0;
+                        li {
+                            margin-bottom: 1.5rem;
+                            font-size: 1.05rem;
+                            color: $accent-light;
+                            font-weight: 500;
+                            strong {
+                                color: $common_text;
+                            }
+                            .date {
+                                float: right;
+                                font-size: 0.7rem;
+                                color: $common_text;
+                                font-weight: 300;
+                            }
+                        }
+                    }
+                }
+                
+                .station-map {
+                    width: 25%;
+                    height: 100%;
+                    .leaflet-container {
+                        height: 100%;
+                        border-radius: 12px;
+                    }
+                }
+
+                .station-chart {
+                    flex: 1;
+                    .chart-toggle {
+                        display: flex;
+                        gap: 0.5rem;
+                        margin-bottom: 2rem;
+
+                        button {
+                            padding: 0.5rem 1rem;
+                            border: 1px solid $accent;
+                            border-radius: 8px;
+                            background-color: transparent;
+                            color: $accent;
+                            font-weight: 500;
+                            cursor: pointer;
+                            transition: background-color 0.2s, color 0.2s;
+
+                            &.active {
+                            background-color: $accent;
+                            color: white;
+                            }
+
+                            &:hover:not(.active) {
+                            background-color: $accent-light;
+                            color: $dark_blue;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

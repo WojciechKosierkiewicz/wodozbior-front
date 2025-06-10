@@ -58,7 +58,7 @@ export const exampleApi = {
 
   singleStation: {
     id: "1",
-    name: "wwa",
+    name: "Warszawa",
     river: "Wisła",
     region: "Mazowieckie",
     latitude: 52.2297,
@@ -67,6 +67,8 @@ export const exampleApi = {
     waterLevelDate: "2023-10-01T12:00:00Z",
     waterTemperature: 15.5,
     waterTemperatureDate: "2023-10-01T12:00:00Z",
+    waterFlow: 3,
+    waterFlowDate: "2023-10-01T12:00:00Z",
     icePhenomenon: "Brak",
     icePhenomenonDate: "2023-10-01T12:00:00Z",
     overgrowthPhenomenon: "Brak",
