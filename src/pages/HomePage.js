@@ -12,6 +12,8 @@ function HomePage() {
   const [searchTerm,    setSearchTerm]    = useState("");
   const [selectedPoint, setSelectedPoint] = useState(null);
   const [stations, setStations] = useState([]);
+  const [chartData, setChartData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const combinedPoints = useMemo(
     () =>
@@ -45,6 +47,44 @@ function HomePage() {
 
     fetchStations();
   }, []);
+
+  // New effect to fetch chart data when a station is selected
+  useEffect(() => {
+    const fetchChartData = async () => {
+      if (!selectedPoint) {
+        setChartData([]);
+        return;
+      }
+
+      setLoading(true);
+      try {
+        // Calculate date range for last month
+        const endDate = new Date();
+        const startDate = new Date();
+        startDate.setMonth(startDate.getMonth() - 1);
+        
+        // Format dates as YYYY-MM-DD
+        const formatDate = (date) => {
+          return date.toISOString().split('T')[0];
+        };
+
+        const response = await fetch(
+          `https://wody.nowaccy.cloud/api/hydrodata/stations/${selectedPoint.id}/chart?startDate=${formatDate(startDate)}&endDate=${formatDate(endDate)}`
+        );
+        
+        if (!response.ok) throw new Error('Failed to fetch chart data');
+        const data = await response.json();
+        setChartData(data.waterLevel || []);
+      } catch (error) {
+        console.error('Error fetching chart data:', error);
+        setChartData([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchChartData();
+  }, [selectedPoint]);
 
   const suggestions = useMemo(() => {
     const q = searchTerm.trim().toLowerCase();
@@ -108,10 +148,16 @@ function HomePage() {
                   </button>
                 </div>
 
-                <StationChart
-                  selectedPoint={selectedPoint}
-                  chartType="waterLevel"
-                />
+                {loading ? (
+                  <div className="loading">Ładowanie danych...</div>
+                ) : (
+                  <StationChart
+                    customTitle="Poziom wody (cm)"
+                    customColor={selectedPoint.color}
+                    customUnit="cm"
+                    customData={chartData}
+                  />
+                )}
               </>
             ) : (
               <div className="no-selection">
